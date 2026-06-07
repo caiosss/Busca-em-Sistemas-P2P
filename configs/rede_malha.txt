@@ -1,0 +1,27 @@
+# Topologia em MALHA (grade 3x3) — bem conectada, muitos caminhos alternativos
+num_nodes: 9
+min_neighbors: 2
+max_neighbors: 4
+resources:
+  n1: r1
+  n2: r2
+  n3: r3
+  n4: r4
+  n5: r5
+  n6: r6
+  n7: r7
+  n8: r8
+  n9: r9
+edges:
+  n1, n2
+  n2, n3
+  n4, n5
+  n5, n6
+  n7, n8
+  n8, n9
+  n1, n4
+  n4, n7
+  n2, n5
+  n5, n8
+  n3, n6
+  n6, n9

@@ -1,0 +1,17 @@
+# Topologia em ESTRELA — centro alcança todos em 1 salto
+num_nodes: 6
+min_neighbors: 1
+max_neighbors: 5
+resources:
+  n1: r1
+  n2: r2
+  n3: r3
+  n4: r4
+  n5: r5
+  n6: r6
+edges:
+  n1, n2
+  n1, n3
+  n1, n4
+  n1, n5
+  n1, n6

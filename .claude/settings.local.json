@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"from network import Network; net = Network.from_file\\('configs/rede_exemplo.txt'\\); print\\(net\\); ok, res = net.validate\\(\\); [print\\(f'[{\\\\\"OK\\\\\" if p else \\\\\"FALHA\\\\\"}] {nome}: {msg}'\\) for nome, p, msg in res]; print\\('RESULTADO:', 'VALIDA' if ok else 'INVALIDA'\\)\")",
+      "PowerShell(python -c \"from network import Network; net = Network.from_file\\('configs/rede_exemplo.txt'\\); print\\(net\\); ok, res = net.validate\\(\\); [print\\(\\('[OK] ' if p else '[FALHA] '\\) + nome + ': ' + msg\\) for nome, p, msg in res]; print\\('RESULTADO:', 'VALIDA' if ok else 'INVALIDA'\\)\",)",
+      "PowerShell(python benchmark.py)",
+      "PowerShell(@\\(\"4\",\"n1\",\"r15\",\"5\",\"1\",\"N\",\"0\"\\) | python p2p.py configs/rede_exemplo.txt 2>&1 | Select-String -Pattern \"Algoritmo|Origem|Recurso|Status|Mensagens|Nos envolvidos|Animar\")",
+      "PowerShell($out = @\\(\"4\",\"n1\",\"r15\",\"5\",\"1\",\"N\",\"0\"\\) | python p2p.py configs/rede_exemplo.txt 2>&1 | Out-String; $out.Substring\\([Math]::Max\\(0,$out.Length-900\\)\\))",
+      "PowerShell(@\\(\"4\",\"n1\",\"r15\",\"5\",\"1\",\"N\",\"0\"\\) | python p2p.py configs/rede_exemplo.txt 2>&1 | Select-String -Pattern \"Nova busca|Status|Mensagens|Nos envolvidos\")",
+      "PowerShell(@\\(\"4\",\"x\"\\) | python -c \"import sys; [print\\(repr\\(l\\)\\) for l in sys.stdin]\")",
+      "PowerShell(python _patch.py; @\\(\"4\",\"n1\",\"r15\",\"5\",\"1\",\"N\",\"0\"\\) | python p2p.py configs/rede_exemplo.txt 2>&1 | Select-String -Pattern \"Nova busca|Status|Mensagens|Nos envolvidos\")"
+    ]
+  }
+}
