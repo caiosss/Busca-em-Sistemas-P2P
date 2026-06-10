@@ -118,7 +118,7 @@ MENU = """
    Simulador de Busca em Rede P2P
 ============================================
   1. Carregar arquivo de configuracao
-  2. Validar rede (4 verificacoes)
+  2. Validar rede
   3. Desenhar a rede
   4. Buscar recurso
   5. Rodar testes comparativos (benchmark)

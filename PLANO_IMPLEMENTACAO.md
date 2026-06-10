@@ -156,7 +156,7 @@ Se alguma falhar, abortar a carga e mostrar mensagem clara do que está errado.
 ```
 === Rede P2P — Busca de Recursos ===
 1. Carregar arquivo de configuração
-2. Validar rede (mostra as 4 verificações)
+2. Validar rede
 3. Desenhar a rede
 4. Buscar recurso  (pergunta: node_id, resource_id, ttl, algo)
        -> imprime: encontrado? onde? total de mensagens, nós envolvidos
@@ -174,10 +174,10 @@ A opção 4 imprime o resultado no formato pedido pelo Requisito III (total de m
 
 - Para **cada topologia** em `configs/` e **cada algoritmo**:
   - rodar buscas variando origem/recurso/TTL (random walk: média de N repetições),
-  - registrar: **nº de mensagens**, **nº de nós envolvidos**, **taxa de sucesso**.
+  - registrar: **nº de mensagens**, **p95 de mensagens**, **nº de nós envolvidos**, **p95 de nós envolvidos**, **taxa de sucesso**.
 - Gerar:
   - **tabela** comparativa (pandas → texto/CSV),
-  - **gráficos de barras** (mensagens médias por algoritmo × topologia; sucesso × TTL).
+  - **gráficos de barras** (mensagens médias e p95 por algoritmo × topologia; nós médios e p95; taxa de sucesso).
 - Esses gráficos vão direto para os slides do entregável.
 
 **Hipóteses esperadas (para discutir nos slides):** flooding acha rápido mas gera MUITAS mensagens; random walk gera poucas mensagens mas pode demorar/falhar com TTL baixo; as versões informadas reduzem mensagens conforme o cache "esquenta".

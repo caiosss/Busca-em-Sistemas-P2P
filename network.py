@@ -138,6 +138,19 @@ class Network:
         results = []
         ok = True
 
+        # 0. O cabecalho deve bater com os nos realmente definidos no arquivo.
+        if self.num_nodes <= 0:
+            ok = False
+            results.append(("Quantidade de nos", False,
+                            "num_nodes deve ser maior que zero."))
+        elif len(self.nodes) != self.num_nodes:
+            ok = False
+            results.append(("Quantidade de nos", False,
+                            f"Declarado num_nodes={self.num_nodes}, mas foram encontrados {len(self.nodes)} nos."))
+        else:
+            results.append(("Quantidade de nos", True,
+                            f"Quantidade declarada confere: {self.num_nodes} nos."))
+
         # 4. Não pode haver aresta de um nó para ele mesmo (checa primeiro,
         #    pois afeta a contagem de vizinhos)
         self_loops = [n.id for n in self.nodes.values() if n.id in n.neighbors]

@@ -4,7 +4,9 @@ benchmark.py — Testes comparativos entre os algoritmos de busca.
 Compara flooding, informed_flooding, random_walk e informed_random_walk em
 diferentes topologias, medindo:
     - numero medio de mensagens trocadas
+    - p95 de mensagens trocadas
     - numero medio de nos envolvidos
+    - p95 de nos envolvidos
     - taxa de sucesso
 
 Gera uma tabela no terminal e graficos de barras (salvos em PNG).
@@ -25,6 +27,25 @@ from search import search
 ALGOS = ["flooding", "informed_flooding", "random_walk", "informed_random_walk"]
 REPETICOES = 30   # repete buscas aleatorias p/ tirar media (algoritmos com random)
 SEED = 123
+
+
+def _percentil(valores, pct):
+    """Calcula percentil com interpolacao linear, sem depender de numpy."""
+    if not valores:
+        return 0.0
+    ordenados = sorted(valores)
+    if len(ordenados) == 1:
+        return float(ordenados[0])
+
+    pos = (len(ordenados) - 1) * (pct / 100.0)
+    baixo = int(pos)
+    alto = min(baixo + 1, len(ordenados) - 1)
+    if baixo == alto:
+        return float(ordenados[baixo])
+
+    peso_alto = pos - baixo
+    peso_baixo = 1.0 - peso_alto
+    return ordenados[baixo] * peso_baixo + ordenados[alto] * peso_alto
 
 
 def _todos_recursos(net):
@@ -61,19 +82,23 @@ def avaliar_rede(path, ttl=None):
 
     metricas = {}
     for algo in ALGOS:
-        msgs_total = nos_total = sucessos = 0
+        msgs_amostras = []
+        nos_amostras = []
+        sucessos = 0
         # cache das buscas informadas e' reiniciado por algoritmo para medir do zero
         for node in net.nodes.values():
             node.cache.clear()
         for origem, recurso in pares:
             r = search(net, origem, recurso, ttl, algo, rng=rng)
-            msgs_total += r.total_messages
-            nos_total += len(r.nodes_involved)
+            msgs_amostras.append(r.total_messages)
+            nos_amostras.append(len(r.nodes_involved))
             sucessos += 1 if r.found else 0
         n = len(pares)
         metricas[algo] = {
-            "msgs": msgs_total / n,
-            "nos": nos_total / n,
+            "msgs": sum(msgs_amostras) / n,
+            "msgs_p95": _percentil(msgs_amostras, 95),
+            "nos": sum(nos_amostras) / n,
+            "nos_p95": _percentil(nos_amostras, 95),
             "sucesso": 100.0 * sucessos / n,
         }
     return net, metricas
@@ -81,11 +106,16 @@ def avaliar_rede(path, ttl=None):
 
 def imprimir_tabela(nome_rede, metricas):
     print(f"\n  === {nome_rede} ===")
-    print(f"  {'Algoritmo':<22}{'Msgs(med)':>11}{'Nos(med)':>11}{'Sucesso%':>11}")
-    print("  " + "-" * 55)
+    print(f"  {'Algoritmo':<22}{'Msgs(med)':>11}{'Msgs(p95)':>11}{'Nos(med)':>11}{'Nos(p95)':>11}{'Sucesso%':>11}")
+    print("  " + "-" * 77)
     for algo in ALGOS:
         m = metricas[algo]
-        print(f"  {algo:<22}{m['msgs']:>11.1f}{m['nos']:>11.1f}{m['sucesso']:>11.1f}")
+        print(
+            f"  {algo:<22}"
+            f"{m['msgs']:>11.1f}{m['msgs_p95']:>11.1f}"
+            f"{m['nos']:>11.1f}{m['nos_p95']:>11.1f}"
+            f"{m['sucesso']:>11.1f}"
+        )
 
 
 def gerar_grafico(resultados, metrica="msgs", ylabel="Mensagens (media)",
@@ -129,7 +159,9 @@ def run_benchmark(paths):
     if resultados:
         print()
         gerar_grafico(resultados, "msgs", "Mensagens (media)", "benchmark_msgs.png")
+        gerar_grafico(resultados, "msgs_p95", "Mensagens (p95)", "benchmark_msgs_p95.png")
         gerar_grafico(resultados, "nos", "Nos envolvidos (media)", "benchmark_nos.png")
+        gerar_grafico(resultados, "nos_p95", "Nos envolvidos (p95)", "benchmark_nos_p95.png")
         gerar_grafico(resultados, "sucesso", "Taxa de sucesso (%)", "benchmark_sucesso.png")
     return resultados
 

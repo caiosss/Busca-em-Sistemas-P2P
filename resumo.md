@@ -88,7 +88,7 @@ facilita contar mensagens e animar a busca, sem mudar a lógica dos algoritmos.
 - `ask()` (linha 19) — `input()` robusto (limpa espaços e o BOM que o Windows
   injeta no stdin redirecionado).
 - `carregar()` (linha 25) — lê o arquivo, roda as validações e mostra o resultado.
-- `mostrar_validacoes()` (linha 47) — exibe as 4 verificações (opção 2 do menu).
+- `mostrar_validacoes()` (linha 47) — exibe as validações (opção 2 do menu).
 - `desenhar()` (linha 55) — desenho gráfico da rede (opção 3).
 - **`pedir_busca()`** (linha 64) — pergunta `node_id`, `resource_id`, `ttl`,
   `algo`, executa a busca e imprime **mensagens + nós envolvidos** (opção 4).
@@ -106,7 +106,7 @@ facilita contar mensagens e animar a busca, sem mudar a lógica dos algoritmos.
 ### 3.5 `benchmark.py` — testes comparativos
 
 - `avaliar_rede()` (linha 38) — roda os 4 algoritmos sobre uma rede, com vários
-  pares (origem, recurso), e calcula **médias**: mensagens, nós, % de sucesso.
+  pares (origem, recurso), e calcula **médias e p95**: mensagens, nós, % de sucesso.
 - `imprimir_tabela()` (linha 82) — imprime a tabela no terminal.
 - `gerar_grafico()` (linha 91) — gera os gráficos de barras (PNG).
 - `run_benchmark()` (linha 118) — roda tudo para todas as topologias.
@@ -119,9 +119,11 @@ facilita contar mensagens e animar a busca, sem mudar a lógica dos algoritmos.
 - **Onde:** `network.py::Network.from_file()` (linha 41).
 - Lê `num_nodes`, `min_neighbors`, `max_neighbors`, a seção `resources:` e a
   seção `edges:`. Exemplos prontos em `configs/`.
+- A validação também confere se `num_nodes` bate com a quantidade de nós
+  definidos no arquivo.
 
 ### Requisitos II — as 4 validações
-Todas em `network.py::validate()` (linha 136):
+Em `network.py::validate()` (linha 136), depois da conferência de `num_nodes`:
 1. **Rede não particionada** → via `_is_connected()` (BFS), linha 185.
 2. **Grau entre min e max vizinhos** → laço comparando `len(neighbors)` com
    `min_neighbors`/`max_neighbors`.
@@ -153,7 +155,8 @@ falham; carregar qualquer `configs/*.txt` → todas passam.
 - Compara os algoritmos em **várias topologias** (`configs/`) pelo **número de
   mensagens** (métrica exigida), além de nós envolvidos e taxa de sucesso.
 - Gera as **tabelas** (terminal) e os **gráficos** `benchmark_msgs.png`,
-  `benchmark_nos.png`, `benchmark_sucesso.png` para os slides.
+  `benchmark_msgs_p95.png`, `benchmark_nos.png`, `benchmark_nos_p95.png` e
+  `benchmark_sucesso.png` para os slides.
 
 ---
 

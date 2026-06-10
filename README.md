@@ -36,7 +36,7 @@ python p2p.py configs/rede_exemplo.txt # já carrega e valida uma rede
 
 Opções do menu:
 1. Carregar arquivo de configuração
-2. Validar rede (mostra as 4 verificações)
+2. Validar rede
 3. Desenhar a rede (janela gráfica)
 4. Buscar recurso (pede nó de origem, recurso, TTL e algoritmo)
 5. Rodar testes comparativos (benchmark)
@@ -53,7 +53,8 @@ python benchmark.py                       # todas as topologias em configs/
 python benchmark.py configs/rede_malha.txt
 ```
 
-Gera `benchmark_msgs.png`, `benchmark_nos.png` e `benchmark_sucesso.png`.
+Gera `benchmark_msgs.png`, `benchmark_msgs_p95.png`, `benchmark_nos.png`,
+`benchmark_nos_p95.png` e `benchmark_sucesso.png`.
 
 ## Formato do arquivo de configuração
 
@@ -70,6 +71,9 @@ edges:
 ```
 
 ## Validações (Requisitos II)
+
+O carregamento tambem confere se `num_nodes` bate com a quantidade de nos
+definidos no arquivo. Em seguida, executa as 4 verificacoes pedidas no PDF:
 
 1. Rede não pode estar particionada (deve haver caminho entre quaisquer 2 nós).
 2. Grau de cada nó dentro de `[min_neighbors, max_neighbors]`.
